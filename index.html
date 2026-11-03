@@ -430,7 +430,7 @@ footer{padding:40px 5vw;border-top:1px solid var(--bd);text-align:center}
 <!-- PRODUCT DETAIL PAGE -->
 <div class="page" id="page-produto">
   <div class="prod-detail">
-    <button class="prod-back" onclick="go('catalogo')">
+    <button class="prod-back" onclick="goCatalogAnimated()">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"/></svg>
       Voltar ao catálogo
     </button>
@@ -1215,6 +1215,25 @@ function renderCatalogo() {
       });
     }
   });
+}
+
+// Volta ao catálogo com a foto a regressar ao seu cartão
+function goCatalogAnimated() {
+  const reduce = window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+  const id = location.hash.slice(1);
+  const wrap = document.getElementById('pd-img-wrap');
+  if (!document.startViewTransition || reduce || !id) { go('catalogo'); return; }
+  wrap.style.viewTransitionName = 'pimg';
+  let target = null;
+  const t = document.startViewTransition(() => {
+    wrap.style.viewTransitionName = '';
+    go('catalogo');
+    const card = Array.from(document.querySelectorAll('.pcard')).find(c => c.dataset.id === id);
+    target = card && card.querySelector('.pcard-img');
+    if (card) { card.scrollIntoView({ block: 'center' }); }
+    if (target) target.style.viewTransitionName = 'pimg';
+  });
+  t.finished.finally(() => { wrap.style.viewTransitionName = ''; if (target) target.style.viewTransitionName = ''; });
 }
 
 // Abre a página do produto com a imagem a "crescer" do cartão (View Transitions);
