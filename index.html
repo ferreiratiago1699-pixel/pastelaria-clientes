@@ -524,14 +524,417 @@ async function saveProfile() {
   setTimeout(() => msg.className = 'fmsg', 3000);
 }
 
+/* Catálogo fixo — editado manualmente (site independente da app de gestão) */
+const CATALOGO = [
+ {
+  "id": "manteiga",
+  "nome": "Biscoitos de Manteiga",
+  "preco_caixa": 10.15,
+  "preco_saco": 2.9,
+  "preco_unit": null,
+  "is_singular": false,
+  "dados": {
+   "ingredients": [
+    {
+     "name": "Açúcar"
+    },
+    {
+     "name": "Banha"
+    },
+    {
+     "name": "Ovos"
+    },
+    {
+     "name": "Limão"
+    },
+    {
+     "name": "Fermento em pó"
+    },
+    {
+     "name": "Farinha"
+    },
+    {
+     "name": "Margarina"
+    }
+   ]
+  }
+ },
+ {
+  "id": "mel",
+  "nome": "Biscoitos de Mel",
+  "preco_caixa": 10.15,
+  "preco_saco": 2.9,
+  "preco_unit": null,
+  "is_singular": false,
+  "dados": {
+   "ingredients": [
+    {
+     "name": "Açúcar"
+    },
+    {
+     "name": "Mel"
+    },
+    {
+     "name": "Óleo"
+    },
+    {
+     "name": "Ovos"
+    },
+    {
+     "name": "Limão"
+    },
+    {
+     "name": "Canela em pó"
+    },
+    {
+     "name": "Farinha"
+    },
+    {
+     "name": "Fermento em pó"
+    }
+   ]
+  }
+ },
+ {
+  "id": "azeite",
+  "nome": "Biscoitos de Azeite",
+  "preco_caixa": 10.15,
+  "preco_saco": 2.9,
+  "preco_unit": null,
+  "is_singular": false,
+  "dados": {
+   "ingredients": [
+    {
+     "name": "Açúcar"
+    },
+    {
+     "name": "Mel"
+    },
+    {
+     "name": "Azeite"
+    },
+    {
+     "name": "Banha"
+    },
+    {
+     "name": "Ovos"
+    },
+    {
+     "name": "Canela em pó"
+    },
+    {
+     "name": "Erva-doce"
+    },
+    {
+     "name": "Farinha"
+    },
+    {
+     "name": "Fermento em pó"
+    }
+   ]
+  }
+ },
+ {
+  "id": "noz",
+  "nome": "Biscoitos de Noz",
+  "preco_caixa": 10.15,
+  "preco_saco": 3.3,
+  "preco_unit": null,
+  "is_singular": false,
+  "dados": {
+   "ingredients": [
+    {
+     "name": "Açúcar"
+    },
+    {
+     "name": "Banha"
+    },
+    {
+     "name": "Margarina"
+    },
+    {
+     "name": "Ovos"
+    },
+    {
+     "name": "Leite"
+    },
+    {
+     "name": "Sultanas"
+    },
+    {
+     "name": "Mel"
+    },
+    {
+     "name": "Canela em pó"
+    },
+    {
+     "name": "Fermento em pó"
+    },
+    {
+     "name": "Farinha"
+    },
+    {
+     "name": "Fruta picada"
+    }
+   ]
+  }
+ },
+ {
+  "id": "bolema",
+  "nome": "Bolema",
+  "preco_caixa": 10.15,
+  "preco_saco": 3.15,
+  "preco_unit": null,
+  "is_singular": false,
+  "dados": {
+   "ingredients": [
+    {
+     "name": "Farinha"
+    },
+    {
+     "name": "Levedura"
+    },
+    {
+     "name": "Fermento em pó"
+    },
+    {
+     "name": "Açúcar"
+    },
+    {
+     "name": "Banha"
+    },
+    {
+     "name": "Ovos"
+    },
+    {
+     "name": "Canela em pó"
+    },
+    {
+     "name": "Limão"
+    }
+   ]
+  }
+ },
+ {
+  "id": "limao",
+  "nome": "Biscoitos de Limão",
+  "preco_caixa": 10.15,
+  "preco_saco": 2.9,
+  "preco_unit": null,
+  "is_singular": false,
+  "dados": {
+   "ingredients": [
+    {
+     "name": "Açúcar"
+    },
+    {
+     "name": "Manteiga"
+    },
+    {
+     "name": "Farinha"
+    },
+    {
+     "name": "Fermento em pó"
+    },
+    {
+     "name": "Ovos"
+    },
+    {
+     "name": "Limão"
+    }
+   ]
+  }
+ },
+ {
+  "id": "palitos",
+  "nome": "Palitos",
+  "preco_caixa": 10.15,
+  "preco_saco": 2.9,
+  "preco_unit": null,
+  "is_singular": false,
+  "dados": {
+   "ingredients": [
+    {
+     "name": "Ovos"
+    },
+    {
+     "name": "Açúcar"
+    },
+    {
+     "name": "Farinha"
+    },
+    {
+     "name": "Fermento em pó"
+    }
+   ]
+  }
+ },
+ {
+  "id": "coco",
+  "nome": "Biscoitos de Coco",
+  "preco_caixa": 10.15,
+  "preco_saco": 2.9,
+  "preco_unit": null,
+  "is_singular": false,
+  "dados": {
+   "ingredients": [
+    {
+     "name": "Coco ralado"
+    },
+    {
+     "name": "Açúcar"
+    },
+    {
+     "name": "Creme pasteleiro"
+    },
+    {
+     "name": "Água"
+    }
+   ]
+  }
+ },
+ {
+  "id": "canela",
+  "nome": "Mimos de Canela",
+  "preco_caixa": 11.15,
+  "preco_saco": 3.8,
+  "preco_unit": null,
+  "is_singular": false,
+  "dados": {
+   "ingredients": [
+    {
+     "name": "Ovos"
+    },
+    {
+     "name": "Banha"
+    },
+    {
+     "name": "Açúcar"
+    },
+    {
+     "name": "Canela em pó"
+    }
+   ]
+  }
+ },
+ {
+  "id": "areia",
+  "nome": "Biscoitos de Areia",
+  "preco_caixa": 10.15,
+  "preco_saco": 2.9,
+  "preco_unit": null,
+  "is_singular": false,
+  "dados": {
+   "ingredients": [
+    {
+     "name": "Margarina"
+    },
+    {
+     "name": "Açúcar"
+    },
+    {
+     "name": "Ovos"
+    },
+    {
+     "name": "Farinha"
+    },
+    {
+     "name": "Fermento em pó"
+    },
+    {
+     "name": "Limão"
+    }
+   ]
+  }
+ },
+ {
+  "id": "custom_laranja",
+  "nome": "Biscoitos de Laranja",
+  "preco_caixa": 10.15,
+  "preco_saco": 2.9,
+  "preco_unit": null,
+  "is_singular": false,
+  "dados": {
+   "ingredients": [
+    {
+     "name": "Açúcar"
+    },
+    {
+     "name": "Laranja"
+    },
+    {
+     "name": "Fermento em pó"
+    },
+    {
+     "name": "Ovos"
+    },
+    {
+     "name": "Óleo"
+    },
+    {
+     "name": "Farinha"
+    }
+   ]
+  }
+ },
+ {
+  "id": "custom_sequilhos",
+  "nome": "Sequilhos",
+  "preco_caixa": null,
+  "preco_saco": 2.9,
+  "preco_unit": null,
+  "is_singular": false,
+  "dados": {
+   "ingredients": [
+    {
+     "name": "Leite condensado"
+    },
+    {
+     "name": "Manteiga"
+    },
+    {
+     "name": "Amido"
+    }
+   ]
+  }
+ },
+ {
+  "id": "custom_canelinha",
+  "nome": "Canelinha",
+  "preco_caixa": 8.5,
+  "preco_saco": 2.9,
+  "preco_unit": null,
+  "is_singular": false,
+  "dados": {
+   "ingredients": []
+  }
+ },
+ {
+  "id": "custom_brigadeiro_fit",
+  "nome": "Brigadeiro Fit",
+  "preco_caixa": null,
+  "preco_saco": null,
+  "preco_unit": 2.9,
+  "is_singular": true,
+  "dados": {
+   "ingredients": [
+    {
+     "name": "Banana"
+    },
+    {
+     "name": "Cacau"
+    },
+    {
+     "name": "Leite em pó"
+    }
+   ]
+  }
+ }
+];
+
 async function loadProdutos() {
-  // Mostrar produtos activos OU singulares com preço definido
-  const { data } = await sb.from('produtos').select('*,dados')
-    .or('ativo.eq.true,and(is_singular.eq.true,preco_unit.not.is.null)')
-    .order('nome');
-  produtos = data || [];
+  produtos = CATALOGO.slice();
   renderCatalogo();
-  // count shown in renderCatalogo
 }
 
 const IMGS = {
