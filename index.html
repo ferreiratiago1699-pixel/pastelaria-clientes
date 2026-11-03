@@ -850,7 +850,7 @@ const CATALOGO = [
   }
  },
  {
-  "id": "custom_brigadeiro_fit",
+  "id": "1788362161234",
   "nome": "Brigadeiro Fit",
   "preco_caixa": null,
   "preco_saco": null,
@@ -871,7 +871,7 @@ const CATALOGO = [
   }
  },
  {
-  "id": "custom_cookie_aveia",
+  "id": "1787443679930",
   "nome": "Cookie de Aveia",
   "preco_caixa": null,
   "preco_saco": null,
@@ -898,7 +898,7 @@ const CATALOGO = [
   }
  },
  {
-  "id": "custom_hortela",
+  "id": "1788362160855",
   "nome": "Biscoito de Hortelã",
   "preco_caixa": 8.15,
   "preco_saco": 2.5,
@@ -928,7 +928,7 @@ const CATALOGO = [
   }
  },
  {
-  "id": "custom_rapadura",
+  "id": "1788362161587",
   "nome": "Rapadura",
   "preco_caixa": null,
   "preco_saco": null,
@@ -946,7 +946,7 @@ const CATALOGO = [
   }
  },
  {
-  "id": "custom_cafe",
+  "id": "1788362161963",
   "nome": "Biscoito de Café",
   "preco_caixa": null,
   "preco_saco": null,
@@ -973,7 +973,7 @@ const CATALOGO = [
   }
  },
  {
-  "id": "custom_doce_leite",
+  "id": "1788362162312",
   "nome": "Cookie de Doce de Leite",
   "preco_caixa": null,
   "preco_saco": null,
@@ -1000,7 +1000,7 @@ const CATALOGO = [
   }
  },
  {
-  "id": "custom_sequilhos",
+  "id": "1788363242848",
   "nome": "Sequilhos",
   "preco_caixa": null,
   "preco_saco": null,
@@ -1021,7 +1021,7 @@ const CATALOGO = [
   }
  },
  {
-  "id": "custom_meia_torta",
+  "id": "1788446270995",
   "nome": "Meia Torta",
   "preco_caixa": null,
   "preco_saco": null,
@@ -1039,7 +1039,7 @@ const CATALOGO = [
   }
  },
  {
-  "id": "custom_rolos_canela",
+  "id": "1790087134040",
   "nome": "Rolos de Canela",
   "preco_caixa": null,
   "preco_saco": null,
@@ -1391,12 +1391,13 @@ async function submitOrder() {
     data_entrega: dataE, tipo_entrega: tipo, notas, total,
   }).select().single();
   if (error) { msg.textContent = error.message; msg.className = 'fmsg err'; return; }
-  await sb.from('encomenda_items').insert(items.map(i => ({
+  const { error: itErr } = await sb.from('encomenda_items').insert(items.map(i => ({
     encomenda_id: enc.id, produto_id: i.prodId, produto_nome: i.prodNome,
     box: i.tipo==='caixa'?i.qty:0, bag: i.tipo==='saco'?i.qty:0, units: i.tipo==='unit'?i.qty:0,
     preco_caixa: i.tipo==='caixa'?i.preco:null, preco_saco: i.tipo==='saco'?i.preco:null,
     preco_unit: i.tipo==='unit'?i.preco:null, subtotal: i.qty*i.preco,
   })));
+  if (itErr) { msg.textContent = 'Erro ao gravar os produtos da encomenda: ' + itErr.message + ' — contacta a P&B.'; msg.className = 'fmsg err'; return; }
   cart = []; updCart();
   document.getElementById('co-ovl').classList.remove('open');
   toast('Encomenda realizada com sucesso! 🎉', 'ok');
