@@ -69,8 +69,29 @@ nav{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:1px sol
 #cat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:24px}
 
 /* PRODUCT CARD */
-.pcard{background:#fff;border:1px solid var(--bd);border-radius:var(--radius);overflow:hidden;cursor:pointer;transition:all .2s;display:flex;flex-direction:column}
-.pcard:hover{border-color:var(--gold2);box-shadow:0 8px 32px rgba(0,0,0,.1);transform:translateY(-2px)}
+.pcard{background:#fff;border:1px solid var(--bd);border-radius:var(--radius);overflow:hidden;cursor:pointer;transition:transform .35s cubic-bezier(.2,.7,.2,1),box-shadow .35s,border-color .25s;display:flex;flex-direction:column;transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));will-change:transform}
+.pcard-img img{transition:transform .7s cubic-bezier(.2,.7,.2,1)}
+.pcard-img::after{content:'';position:absolute;inset:0;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.35) 50%,transparent 65%);transform:translateX(-120%);transition:transform .8s ease;pointer-events:none}
+.pcard-name{transition:color .25s}
+.badd{transition:letter-spacing .25s,background .2s,color .2s}
+@media (hover:hover){
+  .pcard:hover{border-color:var(--gold2);box-shadow:0 18px 44px rgba(0,0,0,.16);transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) translateY(-8px)}
+  .pcard:hover .pcard-img img{transform:scale(1.09)}
+  .pcard:hover .pcard-img::after{transform:translateX(120%)}
+  .pcard:hover .pcard-name{color:var(--gold)}
+  .pcard:hover .badd{letter-spacing:.04em}
+}
+.pcard:active{transform:scale(.985)}
+@keyframes pageIn{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+#page-catalogo.active,#page-encomendas.active,#page-conta.active{animation:pageIn .35s ease both}
+.prod-detail.enter{animation:pageIn .45s ease both}
+::view-transition-group(pimg){animation-duration:.5s;animation-timing-function:cubic-bezier(.2,.7,.2,1);border-radius:16px;overflow:hidden}
+::view-transition-old(root),::view-transition-new(root){animation-duration:.3s}
+@media (prefers-reduced-motion:reduce){
+  .pcard,.pcard-img img,.pcard-img::after{transition:none!important}
+  .pcard:hover{transform:none!important}.pcard:hover .pcard-img img{transform:none!important}
+  #page-catalogo.active,#page-encomendas.active,#page-conta.active,.prod-detail.enter{animation:none!important}
+}
 .pcard-img{background:var(--bg2);aspect-ratio:4/3;display:flex;align-items:center;justify-content:center;font-size:4rem;position:relative;overflow:hidden}
 .pcard-img img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
 .pcard-body{padding:20px;flex:1;display:flex;flex-direction:column;gap:8px}
@@ -1179,9 +1200,43 @@ function renderCatalogo() {
   document.querySelectorAll('.pcard').forEach(card => {
     card.addEventListener('click', (e) => {
       if (e.target.classList.contains('badd')) return;
-      openProductPage(card.dataset.id);
+      openProductPageAnimated(card.dataset.id, card);
     });
+    // Inclinação 3D suave a seguir o rato (só em dispositivos com rato)
+    if (window.matchMedia('(hover:hover)').matches && !window.matchMedia('(prefers-reduced-motion:reduce)').matches) {
+      card.addEventListener('mousemove', (e) => {
+        const r = card.getBoundingClientRect();
+        const x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5;
+        card.style.setProperty('--ry', (x * 7).toFixed(2) + 'deg');
+        card.style.setProperty('--rx', (-y * 7).toFixed(2) + 'deg');
+      });
+      card.addEventListener('mouseleave', () => {
+        card.style.setProperty('--rx', '0deg'); card.style.setProperty('--ry', '0deg');
+      });
+    }
   });
+}
+
+// Abre a página do produto com a imagem a "crescer" do cartão (View Transitions);
+// em navegadores sem suporte, entra com um fade suave.
+function openProductPageAnimated(id, card) {
+  const reduce = window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+  const wrap = document.getElementById('pd-img-wrap');
+  const det = document.querySelector('.prod-detail');
+  if (reduce) { openProductPage(id); return; }
+  const cardImg = card && card.querySelector('.pcard-img');
+  if (document.startViewTransition && cardImg) {
+    cardImg.style.viewTransitionName = 'pimg';
+    const t = document.startViewTransition(() => {
+      cardImg.style.viewTransitionName = '';
+      wrap.style.viewTransitionName = 'pimg';
+      openProductPage(id);
+    });
+    t.finished.finally(() => { wrap.style.viewTransitionName = ''; cardImg.style.viewTransitionName = ''; });
+  } else {
+    openProductPage(id);
+    det.classList.remove('enter'); void det.offsetWidth; det.classList.add('enter');
+  }
 }
 
 function openProductPage(id) {
