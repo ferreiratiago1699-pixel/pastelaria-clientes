@@ -474,7 +474,9 @@ window.addEventListener('hashchange', () => {
   else if (!id) go('catalogo');
 });
 
+let _inVT = false, _lastProdId = null;
 function go(page) {
+  if (page === 'catalogo' && !_inVT && document.getElementById('page-produto').classList.contains('active')) { goCatalogAnimated(); return; }
   if (page === 'catalogo') history.replaceState(null,'',location.pathname);
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
   document.querySelectorAll('.nbtn[data-page]').forEach(b => b.classList.remove('active'));
@@ -1220,14 +1222,14 @@ function renderCatalogo() {
 // Volta ao catálogo com a foto a regressar ao seu cartão
 function goCatalogAnimated() {
   const reduce = window.matchMedia('(prefers-reduced-motion:reduce)').matches;
-  const id = location.hash.slice(1);
+  const id = _lastProdId || location.hash.slice(1);
   const wrap = document.getElementById('pd-img-wrap');
-  if (!document.startViewTransition || reduce || !id) { go('catalogo'); return; }
+  if (!document.startViewTransition || reduce || !id) { _inVT = true; go('catalogo'); _inVT = false; return; }
   wrap.style.viewTransitionName = 'pimg';
   let target = null;
   const t = document.startViewTransition(() => {
     wrap.style.viewTransitionName = '';
-    go('catalogo');
+    _inVT = true; go('catalogo'); _inVT = false;
     const card = Array.from(document.querySelectorAll('.pcard')).find(c => c.dataset.id === id);
     target = card && card.querySelector('.pcard-img');
     if (card) { card.scrollIntoView({ block: 'center' }); }
@@ -1317,6 +1319,7 @@ function openProductPage(id) {
   document.getElementById('pd-add-btn').onclick = () => addFromDetail(id, rows);
 
   // Navigate
+  _lastProdId = id;
   location.hash = id;
   go('produto');
 }
