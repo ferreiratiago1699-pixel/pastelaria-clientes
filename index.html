@@ -44,7 +44,11 @@ nav{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:1px sol
 .page.active{display:block}
 
 /* HERO */
-.hero{padding:80px 5vw 60px;text-align:center;border-bottom:1px solid var(--bd)}
+.hero{position:relative;overflow:hidden;padding:110px 5vw 90px;text-align:center;border-bottom:1px solid var(--bd);background:var(--bg2) url(media/hero-poster.jpg) center/cover no-repeat}
+.hero-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0}
+.hero::before{content:'';position:absolute;inset:0;background:rgba(250,250,248,.74);z-index:1}
+.hero>*:not(.hero-video){position:relative;z-index:2}
+@media (prefers-reduced-motion:reduce){.hero-video{display:none}}
 .hero-tag{font-size:.8rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:20px;font-weight:500}
 .hero-title{font-family:'Playfair Display',serif;font-size:clamp(2.2rem,5vw,3.8rem);font-weight:400;line-height:1.15;color:var(--tx);margin-bottom:16px;max-width:700px;margin-left:auto;margin-right:auto}
 .hero-sub{color:var(--txm);font-size:1rem;font-weight:300;max-width:480px;margin:0 auto}
@@ -223,7 +227,7 @@ footer{padding:40px 5vw;border-top:1px solid var(--bd);text-align:center}
 
 /* RESPONSIVE */
 @media(max-width:600px){
-  .hero{padding:48px 5vw 40px}
+  .hero{padding:64px 5vw 52px}
   .cat-section{padding:40px 5vw}
   #cat-grid{grid-template-columns:1fr 1fr;gap:14px}
   .pcard-img{font-size:3rem}
@@ -257,6 +261,7 @@ footer{padding:40px 5vw;border-top:1px solid var(--bd);text-align:center}
 <!-- CATÁLOGO -->
 <div class="page active" id="page-catalogo">
   <div class="hero">
+    <video class="hero-video" autoplay muted loop playsinline preload="auto" poster="media/hero-poster.jpg" aria-hidden="true" tabindex="-1"><source src="media/hero.mp4" type="video/mp4"></video>
     <div class="hero-tag">Pastelaria Artesanal</div>
     <h1 class="hero-title">Feito com amor,<br>entregue com cuidado.</h1>
     <p class="hero-sub">Biscoitos e doces artesanais feitos com ingredientes de qualidade, a pensar em si.</p>
