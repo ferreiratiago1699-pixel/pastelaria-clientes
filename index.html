@@ -1180,9 +1180,9 @@ function renderCatalogo() {
     const em = emoji(p.nome);
     const dc = p.descricao || desc(p.id, p.nome);
     let priceTags = '';
-    if (p.preco_caixa) priceTags += `<span class="ptag">Caixa <strong>${fmt(p.preco_caixa)}</strong></span>`;
-    if (p.preco_saco)  priceTags += `<span class="ptag">Saco <strong>${fmt(p.preco_saco)}</strong></span>`;
-    if (p.is_singular && p.preco_unit) priceTags += `<span class="ptag">Un. <strong>${fmt(p.preco_unit)}</strong></span>`;
+    if (p.preco_caixa && (_catFilter==='todos'||_catFilter==='caixa')) priceTags += `<span class="ptag">Caixa <strong>${fmt(p.preco_caixa)}</strong></span>`;
+    if (p.preco_saco  && (_catFilter==='todos'||_catFilter==='saco'))  priceTags += `<span class="ptag">Saco <strong>${fmt(p.preco_saco)}</strong></span>`;
+    if (p.is_singular && p.preco_unit && (_catFilter==='todos'||_catFilter==='unit')) priceTags += `<span class="ptag">Un. <strong>${fmt(p.preco_unit)}</strong></span>`;
     return `<div class="pcard" data-id="${p.id}">
       <div class="pcard-img">
         ${getImg(p.nome) ? `<img src="${getImg(p.nome)}" alt="${p.nome}" loading="lazy">` : em}
