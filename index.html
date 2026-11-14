@@ -297,6 +297,7 @@ footer{padding:40px 5vw;border-top:1px solid var(--bd);text-align:center}
 .info-pop-t{font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--txl);margin-bottom:6px}
 .info-list{list-style:none;padding:0;margin:0}
 .info-list li{padding:2px 0}
+.info-note{margin-top:10px;padding-top:10px;border-top:1px solid var(--bd);font-size:.8rem;color:var(--txl)}
 .info-wrap.open .info-pop{opacity:1;visibility:visible;transform:none}
 @media(hover:hover){.info-wrap:hover .info-pop{opacity:1;visibility:visible;transform:none}}
 </style>
@@ -1241,7 +1242,7 @@ function openProductPage(id) {
         <div class="info-pop"><div class="info-pop-t">Ingredientes</div><ul class="info-list">${ings.map(i => '<li>' + i.name + '</li>').join('')}</ul></div></div>`;
     }
     h += `<div class="info-wrap"><button type="button" class="info-chip" onclick="toggleInfo(this,event)" aria-expanded="false">Alergénios <span class="info-i">i</span></button>
-      <div class="info-pop"><div class="info-pop-t">Alergénios</div>${al ? '<strong style="color:var(--tx)">Contém:</strong> ' + al.join(', ') + '.<br>' : ''}Pode conter vestígios de outros alergénios.</div></div>`;
+      <div class="info-pop"><div class="info-pop-t">Alergénios</div>${al ? '<strong style="color:var(--tx)">Contém:</strong><ul class="info-list">' + al.map(a => '<li>' + a.charAt(0).toUpperCase() + a.slice(1) + '</li>').join('') + '</ul>' : ''}<div class="info-note">Pode conter vestígios de outros alergénios.</div></div></div>`;
     h += '</div><hr class="prod-divider" style="margin-top:16px">';
     ingEl.innerHTML = h;
   }
