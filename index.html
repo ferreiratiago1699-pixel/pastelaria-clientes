@@ -860,7 +860,7 @@ const CATALOGO = [
      "name": "Açúcar"
     },
     {
-     "name": "Creme pasteleiro"
+     "name": "Creme pasteleiro (farinha, açúcar, água)"
     },
     {
      "name": "Água"
@@ -888,6 +888,12 @@ const CATALOGO = [
     },
     {
      "name": "Canela em pó"
+    },
+    {
+     "name": "Farinha"
+    },
+    {
+     "name": "Água"
     }
    ]
   }
@@ -963,6 +969,9 @@ const CATALOGO = [
     },
     {
      "name": "Leite"
+    },
+    {
+     "name": "Ovos"
     }
    ]
   }
@@ -1034,6 +1043,29 @@ function setFilter(f, btn) {
   if (btn) btn.classList.add('active');
   renderCatalogo();
 }
+
+// Alergénios por produto (confirmados pela P&B a partir das receitas)
+const ALERGENIOS = {
+  manteiga: ['glúten', 'ovos', 'leite'],
+  mel:      ['glúten', 'ovos'],
+  azeite:   ['glúten', 'ovos'],
+  noz:      ['glúten', 'ovos', 'leite', 'frutos de casca rija'],
+  bolema:   ['glúten', 'ovos'],
+  limao:    ['glúten', 'ovos', 'leite'],
+  palitos:  ['glúten', 'ovos'],
+  coco:     ['glúten'],
+  canela:   ['glúten', 'ovos'],
+  areia:    ['glúten', 'ovos', 'leite'],
+  '1788446270995': ['glúten', 'ovos'],          // Meia Torta
+  '1790087134040': ['glúten', 'ovos', 'leite'], // Rolos de Canela
+  '1788362161234': ['leite'],                    // Brigadeiro Fit
+  '1787443679930': ['glúten', 'ovos', 'leite'], // Cookie de Aveia
+  '1788362160855': ['glúten', 'ovos', 'leite'], // Biscoito de Hortelã
+  '1788362161587': ['leite'],                    // Rapadura
+  '1788362161963': ['glúten', 'leite'],          // Biscoito de Café
+  '1788362162312': ['glúten', 'ovos', 'leite', 'soja'], // Cookie de Doce de Leite
+  '1788363242848': ['leite']                     // Sequilhos
+};
 
 // Produtos que ainda não estão à venda (separador "Brevemente"). Formato: {nome, descricao, img}
 const BREVEMENTE = [
@@ -1185,18 +1217,21 @@ function openProductPage(id) {
   document.getElementById('pd-name').textContent = p.nome;
   document.getElementById('pd-desc').textContent = dc;
 
-  // Ingredientes (da coluna dados)
+  // Ingredientes (da coluna dados) e alergénios
   const ings = p.dados?.ingredients || [];
   const ingEl = document.getElementById('pd-ings');
   if (ingEl) {
+    let h = '';
     if (ings.length > 0) {
       const names = ings.map(i => i.name).join(', ');
-      ingEl.innerHTML = `<div class="prod-prices-title" style="margin-bottom:8px">Ingredientes</div>
-        <p style="font-size:.88rem;color:var(--txm);line-height:1.7">${names}</p>
-        <hr class="prod-divider" style="margin-top:16px">`;
-    } else {
-      ingEl.innerHTML = '';
+      h += `<div class="prod-prices-title" style="margin-bottom:8px">Ingredientes</div>
+        <p style="font-size:.88rem;color:var(--txm);line-height:1.7">${names}</p>`;
     }
+    const al = ALERGENIOS[p.id];
+    h += `<div class="prod-prices-title" style="margin:${h ? '16px' : '0'} 0 8px">Alergénios</div>
+      <p style="font-size:.88rem;color:var(--txm);line-height:1.7">${al ? '<strong style="color:var(--tx)">Contém:</strong> ' + al.join(', ') + '.' : ''} Pode conter vestígios de outros alergénios.</p>
+      <hr class="prod-divider" style="margin-top:16px">`;
+    ingEl.innerHTML = h;
   }
 
   // Price badges
