@@ -1292,16 +1292,16 @@ function openProductPage(id) {
 
   // Price badges
   let badges = '';
-  if (p.preco_caixa) badges += `<span class="prod-badge">📦 Caixa <strong>${fmt(p.preco_caixa)}</strong></span>`;
-  if (p.preco_saco)  badges += `<span class="prod-badge">🛍️ Saco <strong>${fmt(p.preco_saco)}</strong></span>`;
-  if (p.is_singular && p.preco_unit) badges += `<span class="prod-badge">🔢 Unidade <strong>${fmt(p.preco_unit)}</strong></span>`;
+  if (p.preco_caixa) badges += `<span class="prod-badge">Caixa <strong>${fmt(p.preco_caixa)}</strong></span>`;
+  if (p.preco_saco)  badges += `<span class="prod-badge">Saco <strong>${fmt(p.preco_saco)}</strong></span>`;
+  if (p.is_singular && p.preco_unit) badges += `<span class="prod-badge">Unidade <strong>${fmt(p.preco_unit)}</strong></span>`;
   document.getElementById('pd-badges').innerHTML = badges;
 
   // Qty rows
   const rows = [];
-  if (p.preco_caixa) rows.push({tipo:'caixa', label:'📦 Caixa (1,5kg)', preco:p.preco_caixa});
-  if (p.preco_saco)  rows.push({tipo:'saco',  label:'🛍️ Saco (500g)',   preco:p.preco_saco});
-  if (p.is_singular && p.preco_unit) rows.push({tipo:'unit', label:'🔢 Unidade', preco:p.preco_unit});
+  if (p.preco_caixa) rows.push({tipo:'caixa', label:'Caixa (1,5kg)', preco:p.preco_caixa});
+  if (p.preco_saco)  rows.push({tipo:'saco',  label:'Saco (500g)',   preco:p.preco_saco});
+  if (p.is_singular && p.preco_unit) rows.push({tipo:'unit', label:'Unidade', preco:p.preco_unit});
 
   document.getElementById('pd-qrows').innerHTML = rows.map(r => {
     const cur = (cart.find(c => c.prodId===id && c.tipo===r.tipo)||{qty:0}).qty;
