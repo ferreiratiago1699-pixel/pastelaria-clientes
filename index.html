@@ -286,6 +286,17 @@ footer{padding:40px 5vw;border-top:1px solid var(--bd);text-align:center}
 .co-termos{display:flex;gap:10px;align-items:flex-start;font-size:.82rem;color:var(--txm);line-height:1.4}
 .co-termos input{margin-top:3px;flex-shrink:0}
 .co-termos a{color:var(--gold);text-decoration:underline;cursor:pointer}
+
+/* Ingredientes / Alergénios: botões com janela */
+.info-row{display:flex;gap:10px;flex-wrap:wrap}
+.info-wrap{position:relative}
+.info-chip{display:inline-flex;align-items:center;gap:8px;background:var(--bg2);border:1px solid var(--bd);border-radius:999px;padding:8px 16px;font-family:inherit;font-size:.85rem;color:var(--tx);cursor:pointer;transition:border-color .15s,background .15s}
+.info-chip:hover,.info-chip[aria-expanded="true"]{border-color:var(--gold2);background:#fff}
+.info-i{width:16px;height:16px;border-radius:50%;border:1px solid var(--txl);color:var(--txm);font-size:.65rem;display:inline-flex;align-items:center;justify-content:center;font-style:italic;font-family:'Playfair Display',serif}
+.info-pop{position:absolute;left:0;top:calc(100% + 8px);z-index:30;width:min(340px,80vw);background:#fff;border:1px solid var(--bd);border-radius:12px;box-shadow:0 12px 34px rgba(0,0,0,.16);padding:14px 16px;font-size:.85rem;line-height:1.65;color:var(--txm);opacity:0;visibility:hidden;transform:translateY(-4px);transition:opacity .18s,transform .18s,visibility .18s}
+.info-pop-t{font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--txl);margin-bottom:6px}
+.info-wrap.open .info-pop{opacity:1;visibility:visible;transform:none}
+@media(hover:hover){.info-wrap:hover .info-pop{opacity:1;visibility:visible;transform:none}}
 </style>
 </head>
 <body>
@@ -1217,20 +1228,19 @@ function openProductPage(id) {
   document.getElementById('pd-name').textContent = p.nome;
   document.getElementById('pd-desc').textContent = dc;
 
-  // Ingredientes (da coluna dados) e alergénios
+  // Ingredientes e alergénios (botões com pequena janela)
   const ings = p.dados?.ingredients || [];
   const ingEl = document.getElementById('pd-ings');
   if (ingEl) {
-    let h = '';
-    if (ings.length > 0) {
-      const names = ings.map(i => i.name).join(', ');
-      h += `<div class="prod-prices-title" style="margin-bottom:8px">Ingredientes</div>
-        <p style="font-size:.88rem;color:var(--txm);line-height:1.7">${names}</p>`;
-    }
     const al = ALERGENIOS[p.id];
-    h += `<div class="prod-prices-title" style="margin:${h ? '16px' : '0'} 0 8px">Alergénios</div>
-      <p style="font-size:.88rem;color:var(--txm);line-height:1.7">${al ? '<strong style="color:var(--tx)">Contém:</strong> ' + al.join(', ') + '.' : ''} Pode conter vestígios de outros alergénios.</p>
-      <hr class="prod-divider" style="margin-top:16px">`;
+    let h = '<div class="info-row">';
+    if (ings.length > 0) {
+      h += `<div class="info-wrap"><button type="button" class="info-chip" onclick="toggleInfo(this,event)" aria-expanded="false">Ingredientes <span class="info-i">i</span></button>
+        <div class="info-pop"><div class="info-pop-t">Ingredientes</div>${ings.map(i => i.name).join(', ')}.</div></div>`;
+    }
+    h += `<div class="info-wrap"><button type="button" class="info-chip" onclick="toggleInfo(this,event)" aria-expanded="false">Alergénios <span class="info-i">i</span></button>
+      <div class="info-pop"><div class="info-pop-t">Alergénios</div>${al ? '<strong style="color:var(--tx)">Contém:</strong> ' + al.join(', ') + '.<br>' : ''}Pode conter vestígios de outros alergénios.</div></div>`;
+    h += '</div><hr class="prod-divider" style="margin-top:16px">';
     ingEl.innerHTML = h;
   }
 
@@ -1570,6 +1580,17 @@ function dismissCookie() {
   let seen = false; try { seen = localStorage.getItem('pb-aviso-cookies') === '1'; } catch (_) {}
   if (!seen) document.getElementById('cookie-bar').classList.add('show');
 })();
+
+function toggleInfo(btn, e) {
+  e.stopPropagation();
+  const w = btn.parentElement, was = w.classList.contains('open');
+  document.querySelectorAll('.info-wrap.open').forEach(x => { x.classList.remove('open'); x.querySelector('.info-chip').setAttribute('aria-expanded','false'); });
+  if (!was) { w.classList.add('open'); btn.setAttribute('aria-expanded','true'); }
+}
+document.addEventListener('click', e => {
+  if (e.target.closest('.info-wrap')) return;
+  document.querySelectorAll('.info-wrap.open').forEach(x => { x.classList.remove('open'); x.querySelector('.info-chip').setAttribute('aria-expanded','false'); });
+});
 </script>
 </body>
 </html>
