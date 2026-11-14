@@ -295,6 +295,8 @@ footer{padding:40px 5vw;border-top:1px solid var(--bd);text-align:center}
 .info-i{width:16px;height:16px;border-radius:50%;border:1px solid var(--txl);color:var(--txm);font-size:.65rem;display:inline-flex;align-items:center;justify-content:center;font-style:italic;font-family:'Playfair Display',serif}
 .info-pop{position:absolute;left:0;top:calc(100% + 8px);z-index:30;width:min(340px,80vw);background:#fff;border:1px solid var(--bd);border-radius:12px;box-shadow:0 12px 34px rgba(0,0,0,.16);padding:14px 16px;font-size:.85rem;line-height:1.65;color:var(--txm);opacity:0;visibility:hidden;transform:translateY(-4px);transition:opacity .18s,transform .18s,visibility .18s}
 .info-pop-t{font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;color:var(--txl);margin-bottom:6px}
+.info-list{list-style:none;padding:0;margin:0}
+.info-list li{padding:2px 0}
 .info-wrap.open .info-pop{opacity:1;visibility:visible;transform:none}
 @media(hover:hover){.info-wrap:hover .info-pop{opacity:1;visibility:visible;transform:none}}
 </style>
@@ -1236,7 +1238,7 @@ function openProductPage(id) {
     let h = '<div class="info-row">';
     if (ings.length > 0) {
       h += `<div class="info-wrap"><button type="button" class="info-chip" onclick="toggleInfo(this,event)" aria-expanded="false">Ingredientes <span class="info-i">i</span></button>
-        <div class="info-pop"><div class="info-pop-t">Ingredientes</div>${ings.map(i => i.name).join(', ')}.</div></div>`;
+        <div class="info-pop"><div class="info-pop-t">Ingredientes</div><ul class="info-list">${ings.map(i => '<li>' + i.name + '</li>').join('')}</ul></div></div>`;
     }
     h += `<div class="info-wrap"><button type="button" class="info-chip" onclick="toggleInfo(this,event)" aria-expanded="false">Alergénios <span class="info-i">i</span></button>
       <div class="info-pop"><div class="info-pop-t">Alergénios</div>${al ? '<strong style="color:var(--tx)">Contém:</strong> ' + al.join(', ') + '.<br>' : ''}Pode conter vestígios de outros alergénios.</div></div>`;
