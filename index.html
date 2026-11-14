@@ -648,7 +648,7 @@ const CATALOGO = [
      "name": "Farinha"
     },
     {
-     "name": "Margarina"
+     "name": "Manteiga"
     }
    ]
   }
@@ -744,7 +744,7 @@ const CATALOGO = [
      "name": "Banha"
     },
     {
-     "name": "Margarina"
+     "name": "Manteiga"
     },
     {
      "name": "Ovos"
@@ -927,7 +927,7 @@ const CATALOGO = [
   "dados": {
    "ingredients": [
     {
-     "name": "Margarina"
+     "name": "Manteiga"
     },
     {
      "name": "Açúcar"
@@ -949,7 +949,7 @@ const CATALOGO = [
  },
  {
   "id": "1788446270995",
-  "nome": "Meia Torta",
+  "nome": "Meia Torta de Chocolate",
   "preco_caixa": null,
   "preco_saco": null,
   "preco_unit": 5.5,
@@ -961,6 +961,9 @@ const CATALOGO = [
     },
     {
      "name": "Ovos"
+    },
+    {
+     "name": "Recheio de chocolate"
     }
    ]
   }
@@ -1037,16 +1040,18 @@ function emoji(nome) {
 }
 
 const DESCS = {
-  manteiga:'Biscoitos artesanais de manteiga, com textura delicada e sabor rico.',
-  mel:'Com mel natural, levemente adocicados e com aroma inconfundível.',
-  azeite:'Com azeite extra virgem, leves e com um toque mediterrânico.',
-  noz:'Com nozes seleccionadas, crocantes e com sabor intenso.',
-  bolema:'Receita tradicional, fofa por dentro e dourada por fora.',
-  limao:'Com limão fresco, refrescantes e com toque cítrico irresistível.',
-  palitos:'Palitos crocantes, perfeitos para acompanhar chá ou café.',
-  coco:'Com coco ralado, exóticos e com textura única.',
-  canela:'Mimos de canela, delicados e perfumados — um clássico de sempre.',
-  areia:'Biscoitos de areia que derretem na boca. Uma receita com história.',
+  rolos:'Rolos macios e fofos, com recheio de canela.',
+  torta:'Torta enrolada, macia, com recheio de chocolate.',
+  manteiga:'Biscoitos dourados de textura macia e delicada, aromatizados com limão.',
+  mel:'Biscoitos adocicados com mel natural, com um toque de canela e limão.',
+  azeite:'Biscoitos leves feitos com azeite e mel, com canela e erva-doce.',
+  noz:'Biscoitos com nozes, sultanas e fruta picada, aromatizados com mel e canela.',
+  bolema:'Bolo macio e dourado, aromatizado com canela e limão.',
+  limao:'Biscoitos com sabor fresco a limão.',
+  palitos:'Palitos crocantes, ótimos para acompanhar um café ou um chá.',
+  coco:'Biscoitos de coco ralado, doces e de textura própria.',
+  canela:'Pequenos bolos macios, aromatizados com canela.',
+  areia:'Biscoitos que se desfazem na boca, com um toque de limão.',
 };
 function desc(id, nome) {
   const k = Object.keys(DESCS).find(k => id.includes(k) || nome.toLowerCase().includes(k));
