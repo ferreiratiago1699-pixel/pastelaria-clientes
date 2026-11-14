@@ -300,6 +300,7 @@ footer{padding:40px 5vw;border-top:1px solid var(--bd);text-align:center}
 .info-note{margin-top:10px;padding-top:10px;border-top:1px solid var(--bd);font-size:.8rem;color:var(--txl)}
 .info-wrap.open .info-pop{opacity:1;visibility:visible;transform:none}
 @media(hover:hover){.info-wrap:hover .info-pop{opacity:1;visibility:visible;transform:none}}
+.iva-note{font-size:.78rem;color:var(--txl);margin:-18px 0 22px}
 </style>
 </head>
 <body>
@@ -332,6 +333,7 @@ footer{padding:40px 5vw;border-top:1px solid var(--bd);text-align:center}
       <h2 class="cat-title">Os nossos produtos</h2>
       <span class="cat-count" id="cat-count"></span>
     </div>
+    <p class="iva-note">Todos os preços incluem IVA à taxa legal em vigor.</p>
     <div class="cat-filters">
       <button class="ftab active" onclick="setFilter('todos',this)">Todos</button>
       <button class="ftab" onclick="setFilter('caixa',this)">Caixas</button>
@@ -413,6 +415,7 @@ footer{padding:40px 5vw;border-top:1px solid var(--bd);text-align:center}
         <span class="cart-total-label">Total</span>
         <span id="cart-tot">0,00 €</span>
       </div>
+      <div class="iva-note" style="margin:-4px 0 10px;text-align:right">IVA incluído</div>
       <button class="bcheckout" onclick="checkout()">Finalizar encomenda</button>
     </div>
   </div>
@@ -1405,7 +1408,7 @@ function checkout() {
       '<strong style="color:var(--gold)">' + fmt(i.qty*i.preco) + '</strong></div>';
   });
   sumHtml += '<div style="border-top:1px solid var(--bd);margin-top:10px;padding-top:10px;display:flex;justify-content:space-between;font-weight:600">' +
-    '<span>Total</span><span style="color:var(--gold);font-family:Playfair Display,serif;font-size:1.1rem">' + fmt(total) + '</span></div></div>';
+    '<span>Total</span><span style="color:var(--gold);font-family:Playfair Display,serif;font-size:1.1rem">' + fmt(total) + '</span></div><div class="iva-note" style="text-align:right;margin-top:4px">IVA incluído</div></div>';
   document.getElementById('co-sum').innerHTML = sumHtml;
   const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate()+1);
   document.getElementById('co-data').min   = tomorrow.toISOString().slice(0,10);
@@ -1544,7 +1547,7 @@ ${_responsavel()}
 <h3>2. Âmbito</h3>
 <p>Estes termos aplicam-se às encomendas feitas através deste site. As contas de cliente são criadas pela ${EMPRESA.marca}; ao fazer uma encomenda declara ter lido e aceite estes termos.</p>
 <h3>3. Produtos e preços</h3>
-<p>Os produtos são de pastelaria artesanal. Os preços estão indicados em euros (€) e referem-se à caixa, ao saco ou à unidade, conforme indicado em cada produto. Os produtos da secção "Brevemente" ainda não estão disponíveis para encomenda. As imagens são ilustrativas.</p>
+<p>Os produtos são de pastelaria artesanal. Os preços estão indicados em euros (€), incluem IVA à taxa legal em vigor e referem-se à caixa, ao saco ou à unidade, conforme indicado em cada produto. Os produtos da secção "Brevemente" ainda não estão disponíveis para encomenda. As imagens são ilustrativas.</p>
 <h3>4. Como encomendar</h3>
 <p>Escolha os produtos, indique a data pretendida e o tipo (levantamento ou entrega) e confirme a encomenda. A encomenda é um pedido que fica sujeito à nossa confirmação, que podemos recusar ou ajustar (por exemplo, por falta de disponibilidade na data escolhida), informando-o.</p>
 <h3>5. Entrega e levantamento</h3>
