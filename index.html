@@ -297,6 +297,7 @@ footer{padding:40px 5vw;border-top:1px solid var(--bd);text-align:center}
       <button class="ftab" onclick="setFilter('caixa',this)">Caixas</button>
       <button class="ftab" onclick="setFilter('saco',this)">Sacos</button>
       <button class="ftab" onclick="setFilter('unit',this)">Unidades</button>
+      <button class="ftab" onclick="setFilter('brevemente',this)">Brevemente</button>
     </div>
     <div id="cat-grid"></div>
   </div>
@@ -1161,7 +1162,30 @@ function setFilter(f, btn) {
   renderCatalogo();
 }
 
+// Produtos que ainda não estão à venda (separador "Brevemente"). Formato: {nome, descricao, img}
+const BREVEMENTE = [];
+
+function renderBrevemente() {
+  const g = document.getElementById('cat-grid');
+  const cnt = document.getElementById('cat-count');
+  if (cnt) cnt.textContent = BREVEMENTE.length + ' produto' + (BREVEMENTE.length !== 1 ? 's' : '');
+  if (!BREVEMENTE.length) {
+    g.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--txm)">Novidades a caminho. Volte em breve!</div>';
+    return;
+  }
+  g.innerHTML = BREVEMENTE.map(p => `<div class="pcard" style="cursor:default">
+      <div class="pcard-img">${p.img ? `<img src="${p.img}" alt="${p.nome}" loading="lazy">` : '🍪'}</div>
+      <div class="pcard-body">
+        <div class="pcard-name">${p.nome}</div>
+        <div class="pcard-desc">${p.descricao || ''}</div>
+        <div class="pcard-prices"><span class="ptag">Brevemente</span></div>
+      </div>
+      <div class="pcard-footer"><button class="badd" disabled style="opacity:.5;cursor:default">Brevemente</button></div>
+    </div>`).join('');
+}
+
 function renderCatalogo() {
+  if (_catFilter === 'brevemente') return renderBrevemente();
   const g = document.getElementById('cat-grid');
 
   const filtered = _catFilter === 'todos' ? produtos :
