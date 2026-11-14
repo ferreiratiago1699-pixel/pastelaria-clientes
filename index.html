@@ -4,11 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>P&amp;B Pastelaria</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<link rel="preload" href="media/fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<script src="media/vendor/supabase.js"></script>
 <style>
+@font-face{font-family:'Inter';font-style:normal;font-weight:100 900;font-display:swap;src:url(media/fonts/inter-latin-wght-normal.woff2) format('woff2')}
+@font-face{font-family:'Playfair Display';font-style:normal;font-weight:400 900;font-display:swap;src:url(media/fonts/playfair-display-latin-wght-normal.woff2) format('woff2')}
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
   --bg:    #FAFAF8;
@@ -260,6 +260,32 @@ footer{padding:40px 5vw;border-top:1px solid var(--bd);text-align:center}
 @media(max-width:360px){
   #cat-grid{grid-template-columns:1fr}
 }
+
+/* RODAPÉ, AVISO DE COOKIES E PÁGINAS LEGAIS */
+.site-foot{border-top:1px solid var(--bd);margin-top:60px;padding:28px 20px;text-align:center;font-size:.8rem;color:var(--txm);line-height:1.8}
+.site-foot a{color:var(--txm);text-decoration:underline;cursor:pointer;margin:0 8px}
+.site-foot a:hover{color:var(--gold)}
+#cookie-bar{position:fixed;left:16px;right:16px;bottom:16px;z-index:500;max-width:560px;margin:0 auto;background:#fff;border:1px solid var(--bd);border-radius:var(--radius);box-shadow:0 10px 40px rgba(0,0,0,.18);padding:16px 18px;display:none;gap:14px;align-items:center;font-size:.82rem;color:var(--txm)}
+#cookie-bar.show{display:flex}
+#cookie-bar a{color:var(--gold);text-decoration:underline;cursor:pointer}
+#cookie-bar button{flex-shrink:0;background:var(--tx);color:#fff;border:none;border-radius:8px;padding:9px 16px;font-family:inherit;font-size:.82rem;font-weight:500;cursor:pointer}
+#cookie-bar button:hover{background:var(--gold)}
+@media(max-width:520px){#cookie-bar{flex-direction:column;align-items:stretch;text-align:left}}
+#legal-ovl{position:fixed;inset:0;z-index:450;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s;padding:20px}
+#legal-ovl.open{opacity:1;pointer-events:all}
+.legal-bg{position:absolute;inset:0;background:rgba(0,0,0,.45);backdrop-filter:blur(4px)}
+.legal-box{position:relative;background:var(--bg);border-radius:16px;width:100%;max-width:760px;max-height:88vh;display:flex;flex-direction:column;box-shadow:0 20px 60px rgba(0,0,0,.25)}
+.legal-hdr{display:flex;align-items:center;justify-content:space-between;padding:18px 24px;border-bottom:1px solid var(--bd)}
+.legal-hdr span{font-family:'Playfair Display',serif;font-size:1.25rem}
+.legal-body{padding:8px 24px 28px;overflow-y:auto;font-size:.9rem;line-height:1.65;color:var(--txm)}
+.legal-body h3{font-size:.95rem;color:var(--tx);margin:22px 0 6px;font-weight:600}
+.legal-body p,.legal-body li{margin-bottom:8px}
+.legal-body ul{padding-left:20px}
+.legal-body a{color:var(--gold);text-decoration:underline}
+.legal-upd{font-size:.78rem;color:var(--txl);margin-top:18px}
+.co-termos{display:flex;gap:10px;align-items:flex-start;font-size:.82rem;color:var(--txm);line-height:1.4}
+.co-termos input{margin-top:3px;flex-shrink:0}
+.co-termos a{color:var(--gold);text-decoration:underline;cursor:pointer}
 </style>
 </head>
 <body>
@@ -422,6 +448,7 @@ footer{padding:40px 5vw;border-top:1px solid var(--bd);text-align:center}
         <label class="co-label">Notas (opcional)</label>
         <input class="finput" id="co-notas" type="text" placeholder="Ex: alergia a frutos secos">
       </div>
+      <label class="co-termos"><input type="checkbox" id="co-termos"><span>Li e aceito os <a onclick="openLegal('termos')">Termos e Condições</a> e a <a onclick="openLegal('privacidade')">Política de Privacidade</a>.</span></label>
       <div id="co-msg" class="fmsg"></div>
       <button class="bprim" onclick="submitOrder()">Confirmar encomenda</button>
     </div>
@@ -462,6 +489,23 @@ footer{padding:40px 5vw;border-top:1px solid var(--bd);text-align:center}
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
 
+
+<!-- RODAPÉ / AVISO DE COOKIES / PÁGINAS LEGAIS -->
+<footer class="site-foot">
+  <div>© <span id="foot-year"></span> P&amp;B Pastelaria · Crónicas do Avental, Lda. · NIPC 519699254</div>
+  <div><a onclick="openLegal('privacidade')">Política de Privacidade e Cookies</a><a onclick="openLegal('termos')">Termos e Condições</a><a href="https://www.livroreclamacoes.pt" target="_blank" rel="noopener">Livro de Reclamações</a></div>
+</footer>
+<div id="cookie-bar" role="dialog" aria-label="Aviso de cookies">
+  <div>Este site usa apenas armazenamento <strong>essencial</strong> (manter a sua sessão iniciada). Não usamos cookies de publicidade nem de análise. <a onclick="openLegal('privacidade')">Saber mais</a></div>
+  <button onclick="dismissCookie()">Entendi</button>
+</div>
+<div id="legal-ovl">
+  <div class="legal-bg" onclick="closeLegal()"></div>
+  <div class="legal-box">
+    <div class="legal-hdr"><span id="legal-title"></span><button class="xbtn" onclick="closeLegal()" aria-label="Fechar">✕</button></div>
+    <div class="legal-body" id="legal-body"></div>
+  </div>
+</div>
 <script>
 const {createClient} = supabase;
 const sb = createClient('https://ndrbsimikcjhqnhfzuza.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5kcmJzaW1pa2NqaHFuaGZ6dXphIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODcxNTU1ODIsImV4cCI6MjEwMjczMTU4Mn0.GhrEuWv8B5tMi8OjDJqqFlIyDCJ8Ne0QOX5JwXSSj-o');
@@ -1331,6 +1375,7 @@ async function submitOrder() {
   const msg   = document.getElementById('co-msg');
   msg.className = 'fmsg';
   if (!dataE) { msg.textContent = 'Selecciona uma data.'; msg.className = 'fmsg err'; return; }
+  if (!document.getElementById('co-termos').checked) { msg.textContent = 'Tem de aceitar os Termos e Condições e a Política de Privacidade.'; msg.className = 'fmsg err'; return; }
   const items = cart.filter(i => i.qty > 0);
   const total = items.reduce((s,i) => s + i.qty*i.preco, 0);
   const { data: enc, error } = await sb.from('encomendas').insert({
@@ -1388,6 +1433,108 @@ function toast(msg, type) {
   el.textContent = msg; el.className = 'toast show ' + (type||'');
   clearTimeout(_ti); _ti = setTimeout(() => el.className = 'toast', 3000);
 }
+
+// ── Páginas legais e aviso de cookies ──
+const EMPRESA = {
+  nome: 'Crónicas do Avental, Limitada',
+  marca: 'P&B Pastelaria',
+  nipc: '519699254',
+  sede: 'Monte das Pias, n.º 15, 7100-145 Estremoz',
+  loja: 'Rua Cândido dos Reis, n.º 11, 7470-024 Cano, Sousel',
+  tel: '963 807 622',
+  email: ''   // preencher quando existir (aparece automaticamente nas páginas legais)
+};
+const LEGAL_DATA = '14 de novembro de 2026';
+function _contacto() {
+  return 'Telefone: <strong>' + EMPRESA.tel + '</strong>' + (EMPRESA.email ? ' · Email: <a href="mailto:' + EMPRESA.email + '">' + EMPRESA.email + '</a>' : '');
+}
+function _responsavel() {
+  return '<p><strong>' + EMPRESA.nome + '</strong> (marca <em>' + EMPRESA.marca + '</em>), NIPC ' + EMPRESA.nipc + '.<br>Sede: ' + EMPRESA.sede + '.<br>Estabelecimento: ' + EMPRESA.loja + '.<br>' + _contacto() + '</p>';
+}
+const LEGAL = {
+  privacidade: {
+    titulo: 'Política de Privacidade e Cookies',
+    html: () => `
+<h3>1. Quem é o responsável pelo tratamento</h3>
+${_responsavel()}
+<h3>2. Que dados recolhemos</h3>
+<ul>
+<li><strong>Dados da conta:</strong> email e palavra-passe (a palavra-passe é guardada de forma cifrada e nunca é visível para nós).</li>
+<li><strong>Dados de perfil e faturação:</strong> nome, telefone, NIF e morada, quando os fornece.</li>
+<li><strong>Dados das encomendas:</strong> produtos, quantidades, data e tipo de entrega, notas que escreva e valor total.</li>
+</ul>
+<p>Não recolhemos dados de pagamento neste site.</p>
+<h3>3. Para que usamos e com que fundamento</h3>
+<ul>
+<li>Gerir a sua conta e as suas encomendas, preparar e entregar os produtos (execução do contrato).</li>
+<li>Emitir faturas e cumprir obrigações fiscais e contabilísticas (obrigação legal).</li>
+<li>Contactá-lo sobre uma encomenda (execução do contrato).</li>
+<li>Garantir a segurança do site e prevenir abusos (interesse legítimo).</li>
+</ul>
+<h3>4. Durante quanto tempo guardamos</h3>
+<p>Os dados da conta enquanto a conta existir. Os dados de encomendas e faturação durante o prazo exigido pela lei fiscal e comercial (em regra, 10 anos). Pode pedir o encerramento da conta a qualquer momento.</p>
+<h3>5. Quem trata os seus dados por nossa conta</h3>
+<ul>
+<li><strong>Supabase</strong> – alojamento da base de dados e autenticação das contas.</li>
+<li><strong>GitHub Pages</strong> – alojamento do site (recebe o endereço IP de quem o visita, como qualquer servidor web).</li>
+</ul>
+<p>Não vendemos nem cedemos os seus dados a terceiros para marketing.</p>
+<h3>6. Os seus direitos</h3>
+<p>Tem direito de acesso, retificação, apagamento, limitação, oposição e portabilidade dos seus dados. Para os exercer, contacte-nos através dos contactos acima. Tem ainda direito a apresentar reclamação à Comissão Nacional de Proteção de Dados (<a href="https://www.cnpd.pt" target="_blank" rel="noopener">cnpd.pt</a>).</p>
+<h3>7. Cookies e armazenamento local</h3>
+<p>Este site usa apenas armazenamento <strong>estritamente necessário</strong> ao seu funcionamento: guardar a sua sessão iniciada no navegador (para não ter de entrar de cada vez que abre o site). Não usamos cookies de publicidade, de análise ou de redes sociais, pelo que não é necessário o seu consentimento para este armazenamento. O carrinho de compras só existe enquanto o site está aberto.</p>
+<p>Os tipos de letra, imagens e componentes do site são servidos pelo próprio site, sem pedidos a terceiros.</p>
+<h3>8. Alterações</h3>
+<p>Podemos atualizar esta política. A versão em vigor é sempre a publicada nesta página.</p>
+<p class="legal-upd">Última atualização: ${LEGAL_DATA}</p>`
+  },
+  termos: {
+    titulo: 'Termos e Condições',
+    html: () => `
+<h3>1. Identificação</h3>
+${_responsavel()}
+<h3>2. Âmbito</h3>
+<p>Estes termos aplicam-se às encomendas feitas através deste site. As contas de cliente são criadas pela ${EMPRESA.marca}; ao fazer uma encomenda declara ter lido e aceite estes termos.</p>
+<h3>3. Produtos e preços</h3>
+<p>Os produtos são de pastelaria artesanal. Os preços estão indicados em euros (€) e referem-se à caixa, ao saco ou à unidade, conforme indicado em cada produto. Os produtos da secção "Brevemente" ainda não estão disponíveis para encomenda. As imagens são ilustrativas.</p>
+<h3>4. Como encomendar</h3>
+<p>Escolha os produtos, indique a data pretendida e o tipo (levantamento ou entrega) e confirme a encomenda. A encomenda é um pedido que fica sujeito à nossa confirmação, que podemos recusar ou ajustar (por exemplo, por falta de disponibilidade na data escolhida), informando-o.</p>
+<h3>5. Entrega e levantamento</h3>
+<p>Pode levantar a encomenda no estabelecimento (${EMPRESA.loja}) ou pedir entrega ao domicílio, na data acordada. Os produtos são feitos por encomenda e devem ser consumidos no prazo indicado pela ${EMPRESA.marca}.</p>
+<h3>6. Pagamento</h3>
+<p>Este site não processa pagamentos. O pagamento é combinado diretamente com a ${EMPRESA.marca} no momento da entrega ou do levantamento. Se necessitar de fatura com NIF, indique-o no seu perfil.</p>
+<h3>7. Cancelamento e alterações</h3>
+<p>Pode pedir o cancelamento ou alteração de uma encomenda, desde que o faça contactando-nos com a máxima antecedência possível e antes de iniciarmos a sua preparação. Depois de a preparação começar, podemos não conseguir aceitar o cancelamento.</p>
+<h3>8. Direito de livre resolução</h3>
+<p>Nos termos da lei, o direito de livre resolução de 14 dias não se aplica ao fornecimento de bens que possam deteriorar-se ou ficar rapidamente fora de prazo, nem de bens confecionados de acordo com especificações do consumidor. Os nossos produtos de pastelaria enquadram-se nesta exceção.</p>
+<h3>9. Alergénios</h3>
+<p>Os nossos produtos podem conter ou ter contacto com glúten, ovos, leite e frutos de casca rija. Se tem alguma alergia ou intolerância, diga-nos antes de encomendar, nas notas da encomenda ou pelos nossos contactos.</p>
+<h3>10. Se algo correr mal</h3>
+<p>Se tiver algum problema com uma encomenda, contacte-nos e procuraremos resolvê-lo. Dispomos de Livro de Reclamações eletrónico em <a href="https://www.livroreclamacoes.pt" target="_blank" rel="noopener">livroreclamacoes.pt</a>. Pode ainda recorrer a uma entidade de resolução alternativa de litígios de consumo (<a href="https://www.consumidor.gov.pt" target="_blank" rel="noopener">consumidor.gov.pt</a>).</p>
+<h3>11. Lei aplicável</h3>
+<p>Estes termos regem-se pela lei portuguesa.</p>
+<h3>12. Proteção de dados</h3>
+<p>O tratamento dos seus dados está descrito na <a onclick="openLegal('privacidade')" style="cursor:pointer">Política de Privacidade e Cookies</a>.</p>
+<p class="legal-upd">Última atualização: ${LEGAL_DATA}</p>`
+  }
+};
+function openLegal(k) {
+  const d = LEGAL[k]; if (!d) return;
+  document.getElementById('legal-title').textContent = d.titulo;
+  const b = document.getElementById('legal-body'); b.innerHTML = d.html(); b.scrollTop = 0;
+  document.getElementById('legal-ovl').classList.add('open');
+}
+function closeLegal() { document.getElementById('legal-ovl').classList.remove('open'); }
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLegal(); });
+function dismissCookie() {
+  document.getElementById('cookie-bar').classList.remove('show');
+  try { localStorage.setItem('pb-aviso-cookies', '1'); } catch (_) {}
+}
+(function () {
+  const y = document.getElementById('foot-year'); if (y) y.textContent = new Date().getFullYear();
+  let seen = false; try { seen = localStorage.getItem('pb-aviso-cookies') === '1'; } catch (_) {}
+  if (!seen) document.getElementById('cookie-bar').classList.add('show');
+})();
 </script>
 </body>
 </html>
