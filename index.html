@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; media-src 'self'; connect-src 'self' https://ndrbsimikcjhqnhfzuza.supabase.co; object-src 'none'; base-uri 'self'; form-action 'self'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <title>P&amp;B Pastelaria</title>
 <link rel="preload" href="media/fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <script src="media/vendor/supabase.js"></script>
@@ -1382,7 +1384,7 @@ function renderCart() {
   const tl = {caixa:'Caixa', saco:'Saco', unit:'Un.'};
   el.innerHTML = items.map((item, i) =>
     '<div class="citem">' +
-    '<div style="flex:1"><div class="cname">' + item.prodNome + '</div>' +
+    '<div style="flex:1"><div class="cname">' + esc(item.prodNome) + '</div>' +
     '<div class="cdetail">' + (tl[item.tipo]||'') + ' × ' + item.qty + '</div></div>' +
     '<div class="cprice">' + fmt(item.qty * item.preco) + '</div>' +
     '<button class="crm" onclick="rmCart(' + i + ')">✕</button>' +
@@ -1404,7 +1406,7 @@ function checkout() {
   let sumHtml = '<div style="background:var(--bg2);border-radius:10px;padding:14px;margin-bottom:4px">';
   items.forEach(i => {
     sumHtml += '<div style="display:flex;justify-content:space-between;padding:4px 0;font-size:.9rem">' +
-      '<span>' + i.prodNome + ' — ' + (tl[i.tipo]||'') + ' × ' + i.qty + '</span>' +
+      '<span>' + esc(i.prodNome) + ' — ' + (tl[i.tipo]||'') + ' × ' + i.qty + '</span>' +
       '<strong style="color:var(--gold)">' + fmt(i.qty*i.preco) + '</strong></div>';
   });
   sumHtml += '<div style="border-top:1px solid var(--bd);margin-top:10px;padding-top:10px;display:flex;justify-content:space-between;font-weight:600">' +
@@ -1460,16 +1462,16 @@ async function loadEncomendas() {
   const tl = {caixa:'Caixa', saco:'Saco', unit:'Un.'};
   el.innerHTML = data.map(enc => {
     const items = enc.encomenda_items || [];
-    const iStr = items.map(i => { const t=i.box>0?'caixa':i.bag>0?'saco':'unit'; return i.produto_nome+' ('+tl[t]+' ×'+(i.box||i.bag||i.units)+')'; }).join(' · ');
+    const iStr = items.map(i => { const t=i.box>0?'caixa':i.bag>0?'saco':'unit'; return esc(i.produto_nome)+' ('+tl[t]+' ×'+esc(i.box||i.bag||i.units)+')'; }).join(' · ');
     return `<div class="ocard">
       <div class="ohdr">
         <div style="flex:1">
           <div class="odate">${new Date(enc.created_at).toLocaleDateString('pt-PT')} · ${enc.tipo_entrega==='entrega'?'🚚 Entrega':'🏪 Levantamento'}</div>
           <div class="oitems">${iStr}</div>
-          ${enc.notas ? '<div class="onotas">📝 '+enc.notas+'</div>' : ''}
+          ${enc.notas ? '<div class="onotas">📝 '+esc(enc.notas)+'</div>' : ''}
         </div>
         <div style="text-align:right;flex-shrink:0">
-          <span class="obadge ${sc[enc.status]||'s-pendente'}">${sl[enc.status]||enc.status}</span>
+          <span class="obadge ${esc(sc[enc.status]||'s-pendente')}">${esc(sl[enc.status]||enc.status)}</span>
           <div class="oprice">${fmt(enc.total)}</div>
           <div class="odelivery">Entrega: ${new Date(enc.data_entrega+'T00:00:00').toLocaleDateString('pt-PT')}</div>
         </div>
@@ -1478,6 +1480,7 @@ async function loadEncomendas() {
   }).join('');
 }
 
+function esc(v){return String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
 let _ti;
 function toast(msg, type) {
   const el = document.getElementById('toast');
